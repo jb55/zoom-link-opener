@@ -39,9 +39,9 @@ static void hello_cb(struct tray_menu *item) {
 	(void)item;
 	printf("hello cb\n");
 	if (strcmp(tray.icon, TRAY_ICON1) == 0) {
-		tray.icon = TRAY_ICON2;
+		tray.icon = (char*)TRAY_ICON2;
 	} else {
-		tray.icon = TRAY_ICON1;
+		tray.icon = (char*)TRAY_ICON1;
 	}
 	tray_update(&tray);
 }
@@ -118,7 +118,11 @@ static int do_browser_open(char *url, const char *browser)
 
 
 	#ifdef _WIN32
-		ShellExecute(NULL, browser, url, NULL, NULL, SW_SHOWNORMAL);
+		wchar_t tmpbrowser[2048];
+		wchar_t tmpurl[2048];
+		mbstowcs(tmpbrowser, browser, 2048);
+		mbstowcs(tmpurl, url, 2048);
+		ShellExecute(NULL, tmpbrowser, tmpurl, NULL, NULL, SW_SHOWNORMAL);
 	#else
 		execlp(browser, browser, (const char *)url, NULL);
 	#endif
@@ -131,7 +135,9 @@ static int do_open(char *url)
 	printf("opening %s\n", url);
 
 	#ifdef _WIN32
-	ShellExecute(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+	wchar_t tmpurl[2048];
+	mbstowcs(tmpurl, url, 2048);
+	ShellExecute(NULL, L"open", tmpurl, NULL, NULL, SW_SHOWNORMAL);
 	#elif __APPLE__
 	execlp("open", "open", (const char *)url, NULL);
 	#else

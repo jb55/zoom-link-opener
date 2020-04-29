@@ -238,20 +238,22 @@ static LRESULT CALLBACK _tray_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam,
       return 0;
     }
     break;
-  case WM_COMMAND:
-    if (wparam >= ID_TRAY_FIRST) {
-      MENUITEMINFO item = {
-          .cbSize = sizeof(MENUITEMINFO), .fMask = MIIM_ID | MIIM_DATA,
-      };
-      if (GetMenuItemInfo(hmenu, wparam, FALSE, &item)) {
-        struct tray_menu *menu = (struct tray_menu *)item.dwItemData;
-        if (menu != NULL && menu->cb != NULL) {
-          menu->cb(menu);
+  case WM_COMMAND: {
+      if (wparam >= ID_TRAY_FIRST) {
+        MENUITEMINFO item;
+        item.cbSize = sizeof(MENUITEMINFO);
+        item.fMask = MIIM_ID | MIIM_DATA;
+
+        if (GetMenuItemInfo(hmenu, wparam, FALSE, &item)) {
+          struct tray_menu *menu = (struct tray_menu *)item.dwItemData;
+          if (menu != NULL && menu->cb != NULL) {
+            menu->cb(menu);
+          }
         }
+        return 0;
       }
-      return 0;
+      break;
     }
-    break;
   }
   return DefWindowProc(hwnd, msg, wparam, lparam);
 }
@@ -260,7 +262,7 @@ static HMENU _tray_menu(struct tray_menu *m, UINT *id) {
   HMENU hmenu = CreatePopupMenu();
   for (; m != NULL && m->text != NULL; m++, (*id)++) {
     if (strcmp(m->text, "-") == 0) {
-      InsertMenu(hmenu, *id, MF_SEPARATOR, TRUE, "");
+      InsertMenu(hmenu, *id, MF_SEPARATOR, TRUE, L"");
     } else {
       MENUITEMINFO item;
       memset(&item, 0, sizeof(item));
@@ -279,7 +281,9 @@ static HMENU _tray_menu(struct tray_menu *m, UINT *id) {
         item.fState |= MFS_CHECKED;
       }
       item.wID = *id;
-      item.dwTypeData = m->text;
+      wchar_t tmp[128];
+      mbstowcs(tmp, m->text, sizeof(tmp)/sizeof(tmp[0]));
+	  item.dwTypeData = tmp;
       item.dwItemData = (ULONG_PTR)m;
 
       InsertMenuItem(hmenu, *id, TRUE, &item);
@@ -293,12 +297,12 @@ static int tray_init(struct tray *tray) {
   wc.cbSize = sizeof(WNDCLASSEX);
   wc.lpfnWndProc = _tray_wnd_proc;
   wc.hInstance = GetModuleHandle(NULL);
-  wc.lpszClassName = WC_TRAY_CLASS_NAME;
+  wc.lpszClassName = L"TRAY";
   if (!RegisterClassEx(&wc)) {
     return -1;
   }
 
-  hwnd = CreateWindowEx(0, WC_TRAY_CLASS_NAME, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  hwnd = CreateWindowEx(0, L"TRAY", NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0);
   if (hwnd == NULL) {
     return -1;
   }
@@ -337,7 +341,9 @@ static void tray_update(struct tray *tray) {
   hmenu = _tray_menu(tray->menu, &id);
   SendMessage(hwnd, WM_INITMENUPOPUP, (WPARAM)hmenu, 0);
   HICON icon;
-  ExtractIconEx(tray->icon, 0, NULL, &icon, 1);
+  wchar_t iconname[128];
+  mbstowcs(iconname, tray->icon, 128);
+  ExtractIconEx(iconname, 0, NULL, &icon, 1);
   if (nid.hIcon) {
     DestroyIcon(nid.hIcon);
   }
@@ -358,7 +364,7 @@ static void tray_exit() {
     DestroyMenu(hmenu);
   }
   PostQuitMessage(0);
-  UnregisterClass(WC_TRAY_CLASS_NAME, GetModuleHandle(NULL));
+  UnregisterClass(L"TRAY", GetModuleHandle(NULL));
 }
 #else
 static int tray_init(struct tray *tray) { return -1; }

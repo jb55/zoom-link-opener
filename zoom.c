@@ -60,7 +60,7 @@ int parse_zoom_link(char *url, struct zoom_link *link)
 	if (strlen(link->url.path) > 3)
 		link->meeting_id = link->url.path + 3;
 	else {
-		link->meeting_id = "";
+		link->meeting_id = (char*)"";
 	}
 
 	link->hostname = link->url.host;
@@ -69,7 +69,7 @@ int parse_zoom_link(char *url, struct zoom_link *link)
 			find_querystring_password);
 
 	if (link && !link->password)
-		link->password = "";
+		link->password = (char*)"";
 
 	/* print_zoom_link(link); */
 
