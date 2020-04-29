@@ -3,7 +3,6 @@
 
 #if defined (_WIN32) || defined (_WIN64)
 #define TRAY_WINAPI 1
-#include <Shellapi.h>
 #include "win.c"
 #elif defined (__linux__) || defined (linux) || defined (__linux)
 #include <unistd.h>
