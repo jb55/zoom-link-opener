@@ -157,7 +157,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\test.c" />
     <ClCompile Include="..\..\url_parser.c" />
-    <ClCompile Include="..\..\win.c" />
+    <ClCompile Include="..\..\win.cpp" />
     <ClCompile Include="..\..\zoom-link-opener.c" />
     <ClCompile Include="..\..\zoom.c" />
     <ClCompile Include="stdafx.cpp">

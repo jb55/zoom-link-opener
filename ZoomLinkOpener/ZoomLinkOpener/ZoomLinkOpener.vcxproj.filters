@@ -47,13 +47,13 @@
     <ClCompile Include="..\..\url_parser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\win.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\zoom.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\zoom-link-opener.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\win.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
