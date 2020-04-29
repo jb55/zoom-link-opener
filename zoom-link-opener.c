@@ -4,6 +4,7 @@
 #if defined (_WIN32) || defined (_WIN64)
 #define TRAY_WINAPI 1
 #include <Shellapi.h>
+#include "win.c"
 #elif defined (__linux__) || defined (linux) || defined (__linux)
 #include <unistd.h>
 #define TRAY_APPINDICATOR 1
@@ -175,6 +176,9 @@ int main(int argc, char *argv[])
 {
 	const char *browser = "/home/jb55/bin/browser";
 
+#ifdef _WIN32
+	launch_default_apps_dialog();
+#endif
 
 	if (argc == 2) {
 		open_link(argv[1], browser);
