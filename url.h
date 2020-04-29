@@ -229,10 +229,22 @@ url_parse (char *url) {
 
   data->href = url;
   char *tmp;
-  char *tmp_url = strdup(url);
+  char *tmp_url_ = strdup(url);
+  size_t newlen = strlen(tmp_url_)+8;
+  char *tmp_url = malloc(newlen);
   bool is_ssh = false;
 
-  char *protocol = url_get_protocol(tmp_url);
+  char *protocol = url_get_protocol(tmp_url_);
+
+  // HACK af
+  if (!protocol) {
+	  snprintf(tmp_url, newlen, "http://%s", tmp_url_);
+	  protocol = url_get_protocol(tmp_url);
+  }
+  else {
+	  strcpy(tmp_url, tmp_url_);
+  }
+
   if (!protocol) return NULL;
   // length of protocol plus ://
   int protocol_len = (int) strlen(protocol) + 3;
