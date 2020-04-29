@@ -27,10 +27,7 @@
     <ClInclude Include="ZoomLinkOpener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\tray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\zoom.h">
+    <ClInclude Include="protocol-windows.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,19 +38,10 @@
     <ClCompile Include="ZoomLinkOpener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\test.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\url_parser.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\zoom.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\zoom-link-opener.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\win.cpp">
+    <ClCompile Include="protocol-windows.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
