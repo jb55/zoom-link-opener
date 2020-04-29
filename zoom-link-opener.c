@@ -109,6 +109,23 @@ static int run_tray()
 	return 0;
 }
 
+static int do_browser_open(char *url, const char *browser)
+{
+	printf("opening browser: '%s %s'\n", browser, url);
+	FILE *log = fopen("/tmp/zoom-link-opener.txt", "a");
+	fprintf(log, "do_browser_open %s %s\n", browser, url);
+	fclose(log);
+
+
+	#ifdef _WIN32
+		ShellExecute(NULL, browser, url, NULL, NULL, SW_SHOWNORMAL);
+	#else
+		execlp(browser, browser, (const char *)url, NULL);
+	#endif
+
+	return 0;
+}
+
 static int do_open(char *url)
 {
 	printf("opening %s\n", url);
@@ -124,7 +141,12 @@ static int do_open(char *url)
 	return 0;
 }
 
-static int open_link(char *url)
+static bool is_http(char *protocol)
+{
+	return streq(protocol, "http") || streq(protocol, "https");
+}
+
+static int open_link(char *url, const char *browser)
 {
 	char mtg[4096];
 	int ok = 0;
@@ -133,8 +155,12 @@ static int open_link(char *url)
 
 	ok = parse_zoom_link(url, &link);
 
-	if (!ok)
-		return do_open(url);
+	if (!ok) {
+		if (link.url.protocol && is_http(link.url.protocol))
+			return do_browser_open(url, browser);
+		else
+			return do_open(url);
+	}
 
 	make_zoommtg(&link, mtg, sizeof(mtg));
 
@@ -145,10 +171,13 @@ static int open_link(char *url)
 	return ok;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
+	const char *browser = "/home/jb55/bin/browser";
+
 
 	if (argc == 2) {
-		open_link(argv[1]);
+		open_link(argv[1], browser);
 		return 0;
 	}
 
