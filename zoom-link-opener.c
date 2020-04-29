@@ -2,8 +2,10 @@
 #include <string.h>
 
 #if defined (_WIN32) || defined (_WIN64)
+#define strtok_r strtok_s
 #define TRAY_WINAPI 1
 #include "win.c"
+
 #elif defined (__linux__) || defined (linux) || defined (__linux)
 #include <unistd.h>
 #define TRAY_APPINDICATOR 1
