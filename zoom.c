@@ -34,6 +34,7 @@ static void find_querystring_password(void* voidlink, char *key,
 bool validate_zoom_link(struct zoom_link *link)
 {
 	return link
+		&& (link->url_data && link->url_data->protocol && !streq(link->url_data->protocol, "zoommtg"))
 		&& (link->meeting_id && link->meeting_id[0] != 0)
 		&& (strstr(link->hostname, "zoom.us") != 0);
 }
