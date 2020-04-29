@@ -6,7 +6,7 @@ DEPS=zoom.c zoom.h url_parser.c tray.h
 
 all: zoom-link-opener
 
-zoom-link-opener: zoom-link-opener.c $(DEPS)
+zoom-link-opener: main.c $(DEPS)
 	$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
 
 test: test.c $(DEPS)
