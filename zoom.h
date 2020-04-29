@@ -2,12 +2,12 @@
 #ifndef ZOOMLO_H
 #define ZOOMLO_H
 
-#include "url.h"
-
 #define streq(a,b) (strcmp(a,b) == 0)
 
+#include "url_parser.c"
+
 struct zoom_link {
-	url_data_t *url_data;
+	struct url url;
 	char *meeting_id;
 	char *hostname;
 	char *password;

@@ -33,7 +33,7 @@ static struct test_case test_cases[] = {
 	  .expected_password = "",
 	  .expected_hostname = "derp.zoom.us",
 	  .expected_mtg = "zoommtg://derp.zoom.us/start?confno=12345125",
-	  .expected_valid = true,
+	  .expected_valid = false,
 	},
 
 	{ .url = "derpy.zoom.us/j/12345125?pwd=hi",
@@ -41,7 +41,7 @@ static struct test_case test_cases[] = {
 	  .expected_password = "hi",
 	  .expected_hostname = "derpy.zoom.us",
 	  .expected_mtg = "zoommtg://derpy.zoom.us/start?confno=12345125&pwd=hi",
-	  .expected_valid = true,
+	  .expected_valid = false,
 	},
 
 	{ .url = "zoommtg://derpy.zoom.us/start?confid=12345125&pwd=hi",
@@ -78,8 +78,7 @@ static int test_parse()
 	for (size_t i = 0; i < sizeof(test_cases) / sizeof(struct test_case); i++) {
 		struct test_case *test_case = &test_cases[i];
 		init_zoom_link(&link);
-		parse_zoom_link(test_case->url, &link);
-
+		bool parsed = parse_zoom_link(test_case->url, &link);
 		bool valid = validate_zoom_link(&link);
 		if (valid != test_case->expected_valid) {
 			printf("FAIL expected %s zoom link for '%s', got %s\n",
@@ -109,9 +108,11 @@ static int test_parse()
 				printf("FAIL expected mtg '%s', got '%s'\n",
 				       test_case->expected_mtg, buffer);
 			}
+
+			if (parsed)
+				free_zoom_link(&link);
 		}
 
-		free_zoom_link(&link);
 	}
 
 

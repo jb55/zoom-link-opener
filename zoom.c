@@ -34,35 +34,44 @@ static void find_querystring_password(void* voidlink, char *key,
 bool validate_zoom_link(struct zoom_link *link)
 {
 	return link
-		&& (link->url_data && link->url_data->protocol && !streq(link->url_data->protocol, "zoommtg"))
+		&& (link->url.protocol && !streq(link->url.protocol, "zoommtg"))
 		&& (link->meeting_id && link->meeting_id[0] != 0)
 		&& (strstr(link->hostname, "zoom.us") != 0);
 }
 
 
+void print_zoom_link(struct zoom_link *link) 
+{
+	printf("proto %s path %s hostname %s meeting_id %s\n",
+	       link->url.protocol,
+	       link->url.path,
+	       link->hostname,
+		link->meeting_id);
+}
+
 int parse_zoom_link(char *url, struct zoom_link *link)
 {
-	url_data_t *parsed = url_parse(url);
+	int error = parse_url(url, &link->url);
+	if (error != 0) {
+		memset(&link->url, 0, sizeof(link->url));
+		return 0;
+	}
 
-	link->url_data = parsed;
-
-	if (parsed && strlen(parsed->pathname) > 3)
-		link->meeting_id = parsed->pathname + 3;
+	if (strlen(link->url.path) > 3)
+		link->meeting_id = link->url.path + 3;
 	else {
 		link->meeting_id = "";
 	}
 
-	if (parsed)
-		link->hostname = parsed->hostname;
-	else
-		link->hostname = "";
+	link->hostname = link->url.host;
 
-	if (parsed)
-		parse_querystring(parsed->query, link,
-				find_querystring_password);
+	parse_querystring(link->url.query_string, link,
+			find_querystring_password);
 
-	if (!parsed || (link && !link->password))
+	if (link && !link->password)
 		link->password = "";
+
+	/* print_zoom_link(link); */
 
 	return validate_zoom_link(link);
 }
@@ -85,6 +94,5 @@ void init_zoom_link(struct zoom_link *link)
 
 void free_zoom_link(struct zoom_link *link)
 {
-	if (link && link->url_data)
-		url_free(link->url_data);
+	free_parsed_url(&link->url);
 }
