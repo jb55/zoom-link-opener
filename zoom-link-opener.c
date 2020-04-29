@@ -131,7 +131,6 @@ static int open_link(char *url)
 
 	struct zoom_link link;
 
-	printf("link %s\n", url);
 	ok = parse_zoom_link(url, &link);
 
 	if (!ok)
