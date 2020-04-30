@@ -51,6 +51,7 @@ void print_zoom_link(struct zoom_link *link)
 
 int parse_zoom_link(char *url, struct zoom_link *link)
 {
+	memset(&link->url, 0, sizeof(link->url));
 	int error = parse_url(url, &link->url);
 	if (error != 0) {
 		memset(&link->url, 0, sizeof(link->url));
@@ -65,13 +66,12 @@ int parse_zoom_link(char *url, struct zoom_link *link)
 
 	link->hostname = link->url.host;
 
-	parse_querystring(link->url.query_string, link,
+	if (link->url.query_string)
+		parse_querystring(link->url.query_string, link, 
 			find_querystring_password);
 
-	if (link && !link->password)
+	if (!link->url.query_string || link && !link->password)
 		link->password = (char*)"";
-
-	/* print_zoom_link(link); */
 
 	return validate_zoom_link(link);
 }

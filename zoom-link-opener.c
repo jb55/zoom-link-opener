@@ -27,23 +27,23 @@
 
 #include "zoom.c"
 
-static struct tray tray;
+static struct tray *tray;
 
 static void toggle_cb(struct tray_menu *item) {
 	printf("toggle cb\n");
 	item->checked = !item->checked;
-	tray_update(&tray);
+	tray_update(tray);
 }
 
 static void hello_cb(struct tray_menu *item) {
 	(void)item;
 	printf("hello cb\n");
-	if (strcmp(tray.icon, TRAY_ICON1) == 0) {
-		tray.icon = (char*)TRAY_ICON2;
+	if (strcmp(tray->icon, TRAY_ICON1) == 0) {
+		tray->icon = (char*)TRAY_ICON2;
 	} else {
-		tray.icon = (char*)TRAY_ICON1;
+		tray->icon = (char*)TRAY_ICON1;
 	}
-	tray_update(&tray);
+	tray_update(tray);
 }
 
 static void quit_cb(struct tray_menu *item) {
@@ -55,7 +55,7 @@ static void quit_cb(struct tray_menu *item) {
 static void submenu_cb(struct tray_menu *item) {
 	(void)item;
 	printf("submenu: clicked on %s\n", item->text);
-	tray_update(&tray);
+	tray_update(tray);
 }
 
 // Test tray init
@@ -108,6 +108,7 @@ static void setup_tray(struct tray *thetray)
 		}
 	};
 
+	tray = thetray;
 	thetray->icon = (char*)TRAY_ICON1;
 	thetray->menu = (struct tray_menu*)menu;
 }
@@ -129,18 +130,12 @@ static int run_tray(struct tray *thetray)
 
 static int do_browser_open(char *url, const char *browser)
 {
-	printf("opening browser: '%s %s'\n", browser, url);
-	FILE *log = fopen("/tmp/zoom-link-opener.txt", "a");
-	fprintf(log, "do_browser_open %s %s\n", browser, url);
-	fclose(log);
-
-
 	#ifdef _WIN32
 		wchar_t tmpbrowser[2048];
 		wchar_t tmpurl[2048];
 		mbstowcs(tmpbrowser, browser, 2048);
 		mbstowcs(tmpurl, url, 2048);
-		ShellExecute(NULL, tmpbrowser, tmpurl, NULL, NULL, SW_SHOWNORMAL);
+		ShellExecute(NULL, L"open", tmpbrowser, tmpurl, NULL, SW_SHOWNORMAL);
 	#else
 		execlp(browser, browser, (const char *)url, NULL);
 	#endif
