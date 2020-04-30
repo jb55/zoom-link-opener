@@ -70,7 +70,7 @@ int parse_zoom_link(char *url, struct zoom_link *link)
 		parse_querystring(link->url.query_string, link, 
 			find_querystring_password);
 
-	if (!link->url.query_string || link && !link->password)
+	if (!link->url.query_string || (link && !link->password))
 		link->password = (char*)"";
 
 	return validate_zoom_link(link);

@@ -29,11 +29,11 @@
 
 static struct tray *tray;
 
-static void toggle_cb(struct tray_menu *item) {
-	printf("toggle cb\n");
-	item->checked = !item->checked;
-	tray_update(tray);
-}
+/* static void toggle_cb(struct tray_menu *item) { */
+/* 	printf("toggle cb\n"); */
+/* 	item->checked = !item->checked; */
+/* 	tray_update(tray); */
+/* } */
 
 static void hello_cb(struct tray_menu *item) {
 	(void)item;
@@ -52,11 +52,11 @@ static void quit_cb(struct tray_menu *item) {
 	tray_exit();
 }
 
-static void submenu_cb(struct tray_menu *item) {
-	(void)item;
-	printf("submenu: clicked on %s\n", item->text);
-	tray_update(tray);
-}
+/* static void submenu_cb(struct tray_menu *item) { */
+/* 	(void)item; */
+/* 	printf("submenu: clicked on %s\n", item->text); */
+/* 	tray_update(tray); */
+/* } */
 
 // Test tray init
 //static struct tray tray = {
@@ -105,6 +105,17 @@ static void setup_tray(struct tray *thetray)
 			hello_cb,
 			NULL,  //ctx ?
 			NULL,  //submenu
+		},
+		{
+			(char*)"Quit",  // text
+			false,    // disabled
+			false,    // checked
+			quit_cb,
+			NULL,  //ctx ?
+			NULL,  //submenu
+		},
+		{
+			NULL
 		}
 	};
 
