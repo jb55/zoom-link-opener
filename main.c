@@ -3,6 +3,7 @@
 
 int main(int argc, char *argv[])
 {
+	// TODO: browser
 	const char *browser = "/home/jb55/bin/browser";
 	struct tray tray;
 
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	setup_tray(&tray);
-	return run_tray(&tray);
+	return 1;
+
+	//setup_tray(&tray);
+	//return run_tray(&tray);
 }
