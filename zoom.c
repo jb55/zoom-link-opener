@@ -80,8 +80,8 @@ void make_zoommtg(struct zoom_link *link, char *buffer, size_t bufsize)
 {
 	bool has_password = link->password && link->password[0] != 0;
 	const char *fmt = has_password?
-		"zoommtg://%s/start?confno=%s&pwd=%s" :
-		"zoommtg://%s/start?confno=%s%s";
+		"zoommtg://%s/join?confno=%s&pwd=%s" :
+		"zoommtg://%s/join?confno=%s%s";
 
 	snprintf(buffer, bufsize, fmt, link->hostname,
 		 link->meeting_id, link->password);

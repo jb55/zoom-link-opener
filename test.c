@@ -16,7 +16,7 @@ static struct test_case test_cases[] = {
 	  .expected_meeting_id = "1234512345",
 	  .expected_password = "derp",
 	  .expected_hostname = "us04web.zoom.us",
-	  .expected_mtg = "zoommtg://us04web.zoom.us/start?confno=1234512345&pwd=derp",
+	  .expected_mtg = "zoommtg://us04web.zoom.us/join?confno=1234512345&pwd=derp",
 	  .expected_valid = true,
 	},
 
@@ -24,7 +24,7 @@ static struct test_case test_cases[] = {
 	  .expected_meeting_id = "12345125",
 	  .expected_password = "",
 	  .expected_hostname = "zoom.us",
-	  .expected_mtg = "zoommtg://zoom.us/start?confno=12345125",
+	  .expected_mtg = "zoommtg://zoom.us/join?confno=12345125",
 	  .expected_valid = true,
 	},
 
@@ -32,7 +32,7 @@ static struct test_case test_cases[] = {
 	  .expected_meeting_id = "12345125",
 	  .expected_password = "",
 	  .expected_hostname = "derp.zoom.us",
-	  .expected_mtg = "zoommtg://derp.zoom.us/start?confno=12345125",
+	  .expected_mtg = "zoommtg://derp.zoom.us/join?confno=12345125",
 	  .expected_valid = false,
 	},
 
@@ -40,11 +40,11 @@ static struct test_case test_cases[] = {
 	  .expected_meeting_id = "12345125",
 	  .expected_password = "hi",
 	  .expected_hostname = "derpy.zoom.us",
-	  .expected_mtg = "zoommtg://derpy.zoom.us/start?confno=12345125&pwd=hi",
+	  .expected_mtg = "zoommtg://derpy.zoom.us/join?confno=12345125&pwd=hi",
 	  .expected_valid = false,
 	},
 
-	{ .url = "zoommtg://derpy.zoom.us/start?confid=12345125&pwd=hi",
+	{ .url = "zoommtg://derpy.zoom.us/join?confid=12345125&pwd=hi",
 	  .expected_meeting_id = "",
 	  .expected_password = "hi",
 	  .expected_hostname = "derpy.zoom.us",
