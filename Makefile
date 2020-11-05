@@ -13,6 +13,7 @@ endif
 
 CFLAGS=-g -Wall -Wextra $(TRAY_CFLAGS) -DOBJC_OLD_DISPATCH_PROTOTYPES=1 $(shell pkg-config --cflags gtk+-3.0 appindicator3-0.1)
 LDFLAGS=$(shell pkg-config --libs gtk+-3.0 appindicator3-0.1) $(TRAY_LDFLAGS)
+PREFIX ?= /usr
 
 DEPS=zoom.c zoom.h url_parser.c tray.h
 
@@ -23,6 +24,10 @@ zoom-link-opener: main.c $(DEPS)
 
 test: test.c $(DEPS)
 	$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
+
+install: zoom-link-opener
+	mkdir -p $(PREFIX)/bin
+	cp zoom-link-opener $(PREFIX)/bin
 
 clean:
 	rm -f test zoom-link-opener
