@@ -8,6 +8,6 @@ stdenv.mkDerivation {
 
   src = ./.;
 
-  nativeBuildInputs = [ pkgconfig gdb valgrind ];
+  nativeBuildInputs = [ pkg-config gdb valgrind ];
   buildInputs = [ gtk3 libappindicator  ];
 }
